@@ -31,8 +31,8 @@ public class Restaurant {
         return restaurantName=restaurantName;
     }
 
-    public void setRestaurantName() {
-        this.restaurantName=restaurantName;
+    public void setRestaurantName(String restaurantName) {
+        this.restaurantName= this.restaurantName;
     }
 
     public String getRestaurantDetails() {
