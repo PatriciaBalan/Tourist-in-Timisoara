@@ -3,10 +3,12 @@ package firstproject.com.example.demo.component;
 import firstproject.com.example.demo.dto.SurroundingCreateDto;
 import firstproject.com.example.demo.dto.SurroundingInfoDto;
 import firstproject.com.example.demo.model.Surrounding;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class SurroundingMapper {
 
     public static Surrounding toBase (SurroundingCreateDto surroundingCreateDto) {

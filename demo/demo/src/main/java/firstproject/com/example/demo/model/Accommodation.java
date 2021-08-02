@@ -1,11 +1,23 @@
 package firstproject.com.example.demo.model;
 
+import lombok.Cleanup;
+
+import javax.persistence.*;
+
+
+@Entity(name="Accommodation")
+@Table(name="accommodation")
 public class Accommodation {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column
     private int accommodationId;
 
+    @Column
     private String accommodationName;
 
+    @Column
     private String accommodationDetail;
 
     public Accommodation() {

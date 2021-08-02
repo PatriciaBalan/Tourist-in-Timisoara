@@ -1,11 +1,20 @@
 package firstproject.com.example.demo.model;
 
+import javax.persistence.*;
+
+@Entity(name="Restaurant")
+@Table(name="restaurant")
 public class Restaurant {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column
     private int restaurantId;
 
+    @Column
     private String restaurantName;
 
+    @Column
     private String restaurantDetails;
 
 

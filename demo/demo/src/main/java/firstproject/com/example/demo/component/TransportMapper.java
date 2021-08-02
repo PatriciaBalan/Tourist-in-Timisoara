@@ -3,10 +3,12 @@ package firstproject.com.example.demo.component;
 import firstproject.com.example.demo.dto.TransportCreateDto;
 import firstproject.com.example.demo.dto.TransportInfoDto;
 import firstproject.com.example.demo.model.Transport;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class TransportMapper {
 
     public static Transport toBase(TransportCreateDto transportCreateDto) {

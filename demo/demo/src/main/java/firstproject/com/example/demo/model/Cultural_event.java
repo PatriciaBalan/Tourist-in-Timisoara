@@ -1,15 +1,24 @@
 package firstproject.com.example.demo.model;
 
+import javax.persistence.*;
 import java.util.Date;
 
+@Entity(name="Event")
+@Table(name="event")
 public class Cultural_event {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column
     private int eventId;
 
+    @Column
     private String eventName;
 
+    @Column
     private String eventDetail;
 
+    @Column
     private Date eventDate;
 
     public Cultural_event() {

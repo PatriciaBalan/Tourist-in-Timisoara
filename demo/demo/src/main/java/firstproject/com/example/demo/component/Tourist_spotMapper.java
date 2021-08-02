@@ -3,10 +3,12 @@ package firstproject.com.example.demo.component;
 import firstproject.com.example.demo.dto.Tourist_spotCreateDto;
 import firstproject.com.example.demo.dto.Tourist_spotInfoDto;
 import firstproject.com.example.demo.model.Tourist_spot;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class Tourist_spotMapper {
 
     public static Tourist_spot toBase(Tourist_spotCreateDto tourist_spotCreateDto) {

@@ -3,10 +3,12 @@ package firstproject.com.example.demo.component;
 import firstproject.com.example.demo.dto.ShoppingCreateDto;
 import firstproject.com.example.demo.dto.ShoppingInfoDto;
 import firstproject.com.example.demo.model.Shopping;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class ShoppingMapper {
 
     public static Shopping toBase(ShoppingCreateDto shoppingCreateDto) {

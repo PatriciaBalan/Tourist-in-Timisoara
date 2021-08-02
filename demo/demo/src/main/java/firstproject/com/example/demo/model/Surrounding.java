@@ -1,12 +1,21 @@
 package firstproject.com.example.demo.model;
 
+import javax.persistence.*;
+
+@Entity(name="Surrounding")
+@Table(name="surrounding")
 public class Surrounding {
 
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column
     private int surroundingId;
-
+    @Column
     private String surroundingName;
-
+    @Column
     private String surroundingDetail;
+
 
     public Surrounding() {
     }

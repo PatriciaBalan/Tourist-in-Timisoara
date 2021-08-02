@@ -3,10 +3,12 @@ package firstproject.com.example.demo.component;
 import firstproject.com.example.demo.dto.AccommodationCreateDto;
 import firstproject.com.example.demo.dto.AccommodationInfoDto;
 import firstproject.com.example.demo.model.Accommodation;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class AccommodationMapper {
 
     public static Accommodation toBase(AccommodationCreateDto accommodationCreateDto) {

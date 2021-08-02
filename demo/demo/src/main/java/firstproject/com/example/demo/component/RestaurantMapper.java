@@ -3,10 +3,12 @@ package firstproject.com.example.demo.component;
 import firstproject.com.example.demo.dto.RestaurantCreateDto;
 import firstproject.com.example.demo.dto.RestaurantInfoDto;
 import firstproject.com.example.demo.model.Restaurant;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class RestaurantMapper {
 
     public static Restaurant toBase(RestaurantCreateDto restaurantCreateDto) {

@@ -1,11 +1,20 @@
 package firstproject.com.example.demo.model;
 
+import javax.persistence.*;
+
+@Entity(name="Tourist_spot")
+@Table(name="tourist_spot")
 public class Tourist_spot {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column
     private int spotId;
 
+    @Column
     private String spotName;
 
+    @Column
     private String spotDetail;
 
     public Tourist_spot() {

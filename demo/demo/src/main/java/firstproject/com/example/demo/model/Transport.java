@@ -1,11 +1,20 @@
 package firstproject.com.example.demo.model;
 
+import javax.persistence.*;
+
+@Entity(name="Transport")
+@Table(name="transport")
 public class Transport {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column
     private int transportId;
 
+    @Column
     private String transportType;
 
+    @Column
     private String transportDetail;
 
     public Transport() {

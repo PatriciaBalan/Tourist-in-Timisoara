@@ -3,10 +3,12 @@ package firstproject.com.example.demo.component;
 import firstproject.com.example.demo.dto.Cultural_eventCreateDto;
 import firstproject.com.example.demo.dto.Cultural_eventInfoDto;
 import firstproject.com.example.demo.model.Cultural_event;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class Cultural_eventMapper {
 
     public static Cultural_event toBase(Cultural_eventCreateDto cultural_eventCreateDto){
