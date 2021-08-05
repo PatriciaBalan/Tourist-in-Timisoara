@@ -1,4 +1,4 @@
 package firstproject.com.example.demo.service;
 
-public interface ShoppingService {
+public interface ShoppingService  {
 }
