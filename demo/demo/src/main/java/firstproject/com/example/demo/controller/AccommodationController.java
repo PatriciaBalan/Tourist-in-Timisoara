@@ -59,5 +59,4 @@ public class AccommodationController {
     accommodationService.deleteAcc(accommodationId);
     return ResponseEntity.ok().build();
     }
-
 }
