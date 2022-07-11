@@ -1,7 +1,9 @@
 package firstproject.com.example.demo.controller;
 
 import firstproject.com.example.demo.component.TransportMapper;
+import firstproject.com.example.demo.dto.TransportCreateDto;
 import firstproject.com.example.demo.dto.TransportInfoDto;
+import firstproject.com.example.demo.model.Tourist_spot;
 import firstproject.com.example.demo.model.Transport;
 import firstproject.com.example.demo.repository.TransportRepository;
 import firstproject.com.example.demo.service.implementation.TransportService;
@@ -16,23 +18,24 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
 
+@CrossOrigin
 @RestController
-@RequestMapping("/api/transport")
+@RequestMapping("/tourist_in_timisoara/transport")
 @ControllerAdvice
 public class TransportController {
 
     private final Logger logger = LoggerFactory.getLogger(TransportService.class);
-    private TransportMapper transportMapper;
+    private TransportService transportService;
     private TransportRepository transportRepository;
 
-    public TransportController(TransportMapper transportMapper, TransportRepository transportRepository){
-        this.transportMapper = transportMapper;
+    public TransportController(TransportService transportService, TransportRepository transportRepository){
+        this.transportService = transportService;
         this.transportRepository = transportRepository;
     }
 
     @GetMapping
-    List<Transport> getAllTransports() {
-        return transportRepository.findAll();
+    List<TransportInfoDto> getAllTransports() {
+        return transportService.getAllTransports();
     }
 
 //    @GetMapping("/{id}")
@@ -42,25 +45,33 @@ public class TransportController {
 //                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
 //    }
 
-    @PostMapping("/newTransport")
-    ResponseEntity<Transport> createTransport(@RequestBody Transport transport) throws URISyntaxException {
-        logger.info("Request to create Transport: {}", transport);
-        Transport result = transportRepository.save(transport);
-        return ResponseEntity.created(new URI("/api/transport/newTransport" + result.getTransportId()))
-                .body(result);
+    @PostMapping("/createTransport")
+    ResponseEntity<TransportInfoDto> createTransport(@RequestBody TransportCreateDto transportCreateDto) throws URISyntaxException {
+//        logger.info("Request to create Transport: {}", transport);
+//        Transport result = transportRepository.save(transport);
+//        return ResponseEntity.created(new URI("/api/transport/newTransport" + result.getTransportId()))
+//                .body(result);
+        return ResponseEntity.ok(transportService.createTransport(transportCreateDto));
     }
 
-    @PutMapping("/updateTransport/{id}")
-    ResponseEntity<Transport> updateTransport(@RequestBody Transport transport) {
-        logger.info("Request to update transport: {}", transport);
-        Transport result = transportRepository.save(transport);
-        return ResponseEntity.ok().body(result);
+    @PutMapping("/transportId")
+    ResponseEntity<TransportInfoDto> updateTransport(@PathVariable("transportId") int transportId,
+                                                     @RequestBody Transport transport) {
+//        logger.info("Request to update transport: {}", transport);
+//        Transport result = transportRepository.save(transport);
+//        return ResponseEntity.ok().body(result);
+
+        transportRepository.findById(transportId).get();
+        transport.setTransportType(transport.getTransportType());
+        transport.setTransportDetail(transport.getTransportDetail());
+        transportRepository.save(transport);
+        return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/deleteTransportById/{id}")
-    public ResponseEntity<?> deleteTransport(@PathVariable Integer id) {
-        logger.info("Request to delete transport: {}", id);
-        transportRepository.deleteById(id);
+    @DeleteMapping("/transportId")
+    public ResponseEntity<TransportInfoDto> deleteTransport(@PathVariable("transportId") int transportId) {
+        logger.info("Request to delete transport: {}", transportId);
+        transportRepository.deleteById(transportId);
         return ResponseEntity.ok().build();
     }
 
