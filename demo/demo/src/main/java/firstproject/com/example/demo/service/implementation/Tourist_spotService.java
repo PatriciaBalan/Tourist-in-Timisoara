@@ -1,11 +1,17 @@
 package firstproject.com.example.demo.service.implementation;
 
+import firstproject.com.example.demo.component.Tourist_spotMapper;
+import firstproject.com.example.demo.dto.Tourist_spotCreateDto;
+import firstproject.com.example.demo.dto.Tourist_spotInfoDto;
+import firstproject.com.example.demo.exception.EntityDoesNotExistsException;
+import firstproject.com.example.demo.model.Surrounding;
 import firstproject.com.example.demo.model.Tourist_spot;
 import firstproject.com.example.demo.repository.Tourist_spotRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -13,57 +19,45 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
 
-@RestController
-@RequestMapping("/api/touristSpots")
-@ControllerAdvice
-public class Tourist_spotService {
+@Service
+public class Tourist_spotService implements firstproject.com.example.demo.service.Tourist_spotService {
 
-    private final Logger logger = LoggerFactory.getLogger(Tourist_spotService.class);
-    private Tourist_spotService touristSpotService;
+    private final Logger logger = LoggerFactory.getLogger(SurroundingService.class);
     private Tourist_spotRepository touristSpotRepository;
+    private Tourist_spotMapper tourist_spotMapper;
 
-    public Tourist_spotService(Tourist_spotService touristSpotService, Tourist_spotRepository touristSpotRepository){
-        this.touristSpotService = touristSpotService;
-        this.touristSpotRepository = touristSpotRepository;
+    public Tourist_spotService(Tourist_spotMapper tourist_spotMapper, Tourist_spotRepository touristSpotRepository){
+        this.tourist_spotMapper=tourist_spotMapper;
+        this.touristSpotRepository=touristSpotRepository;
     }
 
-    @GetMapping
-    List<Tourist_spot> getAllTouristsSpots () {
-        return touristSpotRepository.findAll();
+    @Override
+    public List<Tourist_spotInfoDto> getAllSpots() {
+        return tourist_spotMapper.toDtoList(touristSpotRepository.findAll());
     }
 
-    @GetMapping("{id}")
-    ResponseEntity<?> getTouristSpotById(@PathVariable Integer id){
-        Optional<Tourist_spot> touristSpot = touristSpotRepository.findById(id);
-        return touristSpot.map(response -> ResponseEntity.ok().body(response))
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    @Override
+    public Tourist_spotInfoDto createSpot(Tourist_spotCreateDto tourist_spotCreateDto) {
+        return tourist_spotMapper.toDto(touristSpotRepository.save(tourist_spotMapper.toBase(tourist_spotCreateDto)));
     }
 
-    @PostMapping("/newTouristSpot")
-    ResponseEntity<Tourist_spot> createTouristSpot(@RequestBody Tourist_spot touristSpot) throws URISyntaxException {
-        logger.info("Request to create new tourist spot: {}", touristSpot);
-        Tourist_spot result = touristSpotRepository.save(touristSpot);
-        return ResponseEntity.created(new URI("/api/touristSpots/newTouristSpot/" + result.getSpotId()))
-                .body(result);
+    @Override
+    public void updateSpot(int spotId, String spotName, String spotDetail) {
+
+        Optional<Tourist_spot> touristSpot = touristSpotRepository.findById(spotId);
+
+        if(!touristSpot.isPresent()) throw  new EntityDoesNotExistsException("Spot id " + spotId);
+
+        Tourist_spot tourist_spot = touristSpot.get();
+        tourist_spot.setSpotName(spotName);
+        tourist_spot.setSpotDetail(tourist_spot.getSpotDetail());
+        touristSpotRepository.save(tourist_spot);
     }
 
-    @PutMapping("/updateTouristSpot/{id}")
-    ResponseEntity<Tourist_spot> updateTouristSpot(@RequestBody Tourist_spot touristSpot) {
-        logger.info("Request to update tourist spot: {}", touristSpot);
-        Tourist_spot result = touristSpotRepository.save(touristSpot);
-        return ResponseEntity.ok().body(result);
-    }
+    @Override
+    public void deleteSpot(int spotId) {
+        touristSpotRepository.findById(spotId);
+        touristSpotRepository.deleteById(spotId);
 
-    @DeleteMapping("/deleteTouristSpot/{id}")
-    public ResponseEntity<?> deleteTouristSpotById(@PathVariable Integer id) {
-        logger.info("Request to delete tourist spot: {}", id);
-        touristSpotRepository.deleteById(id);
-        return ResponseEntity.ok().build();
     }
-
-    @DeleteMapping("/deleteAllTouristSpots")
-    public void deleteAllTouristSpots(){
-         touristSpotRepository.deleteAll();
-    }
-
 }

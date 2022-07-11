@@ -1,11 +1,19 @@
 package firstproject.com.example.demo.service.implementation;
 
+import firstproject.com.example.demo.component.SurroundingMapper;
+import firstproject.com.example.demo.dto.ShoppingCreateDto;
+import firstproject.com.example.demo.dto.ShoppingInfoDto;
+import firstproject.com.example.demo.dto.SurroundingCreateDto;
+import firstproject.com.example.demo.dto.SurroundingInfoDto;
+import firstproject.com.example.demo.exception.EntityDoesNotExistsException;
+import firstproject.com.example.demo.model.Shopping;
 import firstproject.com.example.demo.model.Surrounding;
 import firstproject.com.example.demo.repository.SurroundingRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -13,56 +21,45 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
 
-@RestController
-@RequestMapping("/api/surrounding")
-@ControllerAdvice
-public class SurroundingService {
+@Service
+public class SurroundingService implements firstproject.com.example.demo.service.SurroundingService {
 
     private final Logger logger = LoggerFactory.getLogger(SurroundingService.class);
-    private SurroundingService surroundingService;
+    private SurroundingMapper surroundingMapper;
     private SurroundingRepository surroundingRepository;
 
-    public SurroundingService(SurroundingService surroundingService,SurroundingRepository surroundingRepository) {
-        this.surroundingService = surroundingService;
+    public SurroundingService(SurroundingMapper surroundingMapper,SurroundingRepository surroundingRepository) {
+        this.surroundingMapper = surroundingMapper;
         this.surroundingRepository = surroundingRepository;
     }
 
-    @GetMapping
-    List<Surrounding> getAllSurroundings(){
-        return surroundingRepository.findAll();
+    @Override
+    public List<SurroundingInfoDto> getAllSurroundings() {
+        return surroundingMapper.toDtoList(surroundingRepository.findAll());
     }
 
-    @GetMapping("{id}")
-    ResponseEntity<?> getSurroundingById(@PathVariable Integer id) {
-        Optional<Surrounding> surrounding = surroundingRepository.findById(id);
-        return surrounding.map(response -> ResponseEntity.ok().body(response))
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    @Override
+    public SurroundingInfoDto createSurrounding(SurroundingCreateDto surroundingCreateDto) {
+        return surroundingMapper.toDto(surroundingRepository.save(surroundingMapper.toBase(surroundingCreateDto)));
     }
 
-    @PostMapping("/newSurrounding")
-    ResponseEntity<Surrounding> createSurrounding(@RequestBody Surrounding surrounding) throws URISyntaxException {
-        logger.info("Request to create surrounding: {}", surrounding);
-        Surrounding result = surroundingRepository.save(surrounding);
-        return ResponseEntity.created(new URI("/api/surrounding/newSurrounding/" + result.getSurroundingId()))
-                .body(result);
+    @Override
+    public void deleteSurrounding(int surroundingId) {
+        surroundingRepository.findById(surroundingId);
+        surroundingRepository.deleteById(surroundingId);
     }
 
-    @PutMapping("/updateSurrounding/{id}")
-    ResponseEntity<Surrounding> updateSurrounding(@RequestBody Surrounding surrounding) {
-        logger.info("Request to update surrounding: {}", surrounding);
-        Surrounding result = surroundingRepository.save(surrounding);
-        return ResponseEntity.ok().body(result);
-    }
+    @Override
+    public void updateSurrounding( int surroundingId, String surroundingName, String surroundingDetail) {
 
-    @DeleteMapping("/deleteSurrounding/{id}")
-    ResponseEntity<?> deleteSurroundingById(@RequestParam Integer id){
-        logger.info("Request to delete surrounding: {}", id);
-        surroundingRepository.deleteById(id);
-        return ResponseEntity.ok().build();
-    }
+        Optional<Surrounding> surroundingOptional = surroundingRepository.findById(surroundingId);
 
-    @DeleteMapping("/deleteAllSurroundings")
-    public void deleteAllSurroundings(){
-        surroundingRepository.deleteAll();
+        if(!surroundingOptional.isPresent()) throw  new EntityDoesNotExistsException("Surr id " + surroundingId);
+
+        Surrounding surrounding = surroundingOptional.get();
+        surrounding.setSurroundingName(surroundingName);
+        surrounding.setSurroundingDetail(surrounding.getSurroundingDetail());
+
+        surroundingRepository.save(surrounding);
     }
 }

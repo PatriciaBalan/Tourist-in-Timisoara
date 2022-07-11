@@ -48,8 +48,8 @@ public class Restaurant {
         return restaurantDetails;
     }
 
-    public void setRestaurantDetails() {
-        this.restaurantDetails=restaurantDetails;
+    public void setRestaurantDetails(String restaurantDetails) {
+        this.restaurantDetails= this.restaurantDetails;
     }
 
     @Override

@@ -1,12 +1,10 @@
 package firstproject.com.example.demo.service.implementation;
 
-import firstproject.com.example.demo.component.AccommodationMapper;
 import firstproject.com.example.demo.component.RestaurantMapper;
 import firstproject.com.example.demo.dto.RestaurantCreateDto;
 import firstproject.com.example.demo.dto.RestaurantInfoDto;
 import firstproject.com.example.demo.exception.EntityDoesNotExistsException;
 import firstproject.com.example.demo.model.Restaurant;
-import firstproject.com.example.demo.repository.AccommodationRepository;
 import firstproject.com.example.demo.repository.RestaurantRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,7 +46,7 @@ public class RestaurantService implements firstproject.com.example.demo.service.
     @Override
     public void updateRest(int restaurantId,
                            String restaurantName,
-                           String restaurantDetail) {
+                           String restaurantDetails) {
 
         Optional<Restaurant> restaurantOptional = restaurantRepository.findById(restaurantId);
 
@@ -56,7 +54,7 @@ public class RestaurantService implements firstproject.com.example.demo.service.
 
          Restaurant restaurant = restaurantOptional.get();
          restaurant.setRestaurantName(restaurantName);
-         restaurant.setRestaurantDetails();
+         restaurant.setRestaurantDetails(restaurant.getRestaurantDetails());
 
          restaurantRepository.save(restaurant);
     }

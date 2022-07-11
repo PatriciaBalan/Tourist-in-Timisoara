@@ -16,7 +16,7 @@ import java.util.Optional;
 @Service
 public class AccommodationService implements firstproject.com.example.demo.service.AccommodationService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(AccommodationService.class);
+    //private static final Logger LOG = LoggerFactory.getLogger(AccommodationService.class);
 
     private final AccommodationMapper accommodationMapper;
     private AccommodationRepository accommodationRepository;

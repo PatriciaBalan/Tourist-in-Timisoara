@@ -16,14 +16,14 @@ import java.util.Optional;
 @Service
 public class Cultural_eventService implements firstproject.com.example.demo.service.Cultural_eventService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(Cultural_eventService.class);
+   // private static final Logger LOG = LoggerFactory.getLogger(Cultural_eventService.class);
 
     private final Cultural_eventMapper cultural_eventMapper;
     private Cultural_eventRepository cultural_eventRepository;
 
-    public Cultural_eventService(Cultural_eventService cultural_eventService,
+    public Cultural_eventService(Cultural_eventMapper cultural_eventMapper,
                                 Cultural_eventRepository cultural_eventRepository) {
-        this.cultural_eventMapper = cultural_eventService.cultural_eventMapper;
+        this.cultural_eventMapper = cultural_eventMapper;
         this.cultural_eventRepository = cultural_eventRepository;
     }
 

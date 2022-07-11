@@ -13,7 +13,7 @@ public interface RestaurantService {
 
     void deleteRest(int restaurantId);
 
-    void updateRest(int restaurantId, String restaurantName, String restaurantDetail);
+    void updateRest(int restaurantId, String restaurantName, String restaurantDetails);
 
 
 }

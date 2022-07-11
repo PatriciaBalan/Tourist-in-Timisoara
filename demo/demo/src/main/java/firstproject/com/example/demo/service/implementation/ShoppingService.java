@@ -1,10 +1,20 @@
 package firstproject.com.example.demo.service.implementation;
 
+import firstproject.com.example.demo.component.RestaurantMapper;
+import firstproject.com.example.demo.component.ShoppingMapper;
+import firstproject.com.example.demo.dto.RestaurantCreateDto;
+import firstproject.com.example.demo.dto.RestaurantInfoDto;
+import firstproject.com.example.demo.dto.ShoppingCreateDto;
+import firstproject.com.example.demo.dto.ShoppingInfoDto;
+import firstproject.com.example.demo.exception.EntityDoesNotExistsException;
+import firstproject.com.example.demo.model.Restaurant;
 import firstproject.com.example.demo.model.Shopping;
+import firstproject.com.example.demo.repository.RestaurantRepository;
 import firstproject.com.example.demo.repository.ShoppingRepository;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 import org.slf4j.Logger;
 
@@ -13,56 +23,49 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
 
-@RestController
-@RequestMapping("/api/shopping")
-@ControllerAdvice
-public class ShoppingService {
+@Service
+public class ShoppingService implements firstproject.com.example.demo.service.ShoppingService {
 
-    private final Logger logger = LoggerFactory.getLogger(ShoppingService.class);
-    private ShoppingService shoppingService;
+    private static final Logger LOG = LoggerFactory.getLogger(RestaurantService.class);
+
     private ShoppingRepository shoppingRepository;
+    private final ShoppingMapper shoppingMapper;
 
-    private ShoppingService(ShoppingService shoppingService, ShoppingRepository shoppingRepository) {
-        this.shoppingService = shoppingService;
-        this.shoppingRepository= shoppingRepository;
+    public ShoppingService(ShoppingMapper shoppingMapper,
+                             ShoppingRepository shoppingRepository) {
+        this.shoppingMapper = shoppingMapper;
+        this.shoppingRepository = shoppingRepository;
     }
 
-    @GetMapping
-    List<Shopping> getAllShops() {
-        return shoppingRepository.findAll();
+    @Override
+    public List<ShoppingInfoDto> getAllShops() {
+        return shoppingMapper.toDtoList(shoppingRepository.findAll());
     }
 
-    @GetMapping("/{id}")
-    ResponseEntity<?> getShopById(@PathVariable Integer id) {
-        Optional<Shopping> shop = shoppingRepository.findById(id);
-        return shop.map(response -> ResponseEntity.ok().body(response))
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    @Override
+    public ShoppingInfoDto createShop(ShoppingCreateDto shoppingCreateDto) {
+        return shoppingMapper.toDto(shoppingRepository.save(shoppingMapper.toBase(shoppingCreateDto)));
     }
 
-    @PostMapping("/newShop")
-    ResponseEntity<Shopping> createShop(@RequestBody Shopping shopping) throws URISyntaxException {
-        logger.info("Request to create shop : {}", shopping);
-        Shopping result = shoppingRepository.save(shopping);
-        return ResponseEntity.created(new URI("/api/shopping/newShop"+ result.getShopId()))
-                .body(result);
+    @Override
+    public void deleteShop(int shopId) {
+        shoppingRepository.findById(shopId);
+        shoppingRepository.deleteById(shopId);
     }
 
-    @PutMapping("/updateShop/{id}")
-    ResponseEntity<Shopping> updateShop(@RequestBody Shopping shopping) {
-        logger.info("Request to update shop: {}", shopping);
-        Shopping result = shoppingRepository.save(shopping);
-        return ResponseEntity.ok().body(result);
-    }
+    @Override
+    public void updateShop(int shopId,
+                           String shopName,
+                           String ShopDetail) {
 
-    @DeleteMapping("/deleteShop/{id}")
-    ResponseEntity<?> deleteShop(@PathVariable Integer id) {
-        logger.info("Request to delete shop: {}", id);
-        shoppingRepository.deleteById(id);
-        return ResponseEntity.ok().build();
-    }
+        Optional<Shopping> shoppingOptional = shoppingRepository.findById(shopId);
 
-    @DeleteMapping("/deleteAllShops")
-    public void deleteAllShops(){
-        shoppingRepository.deleteAll();
+        if(!shoppingOptional.isPresent()) throw  new EntityDoesNotExistsException("Shop id " + shopId);
+
+        Shopping shopping = shoppingOptional.get();
+        shopping.setShopName(shopName);
+        shopping.setShopDetail(shopping.getShopDetail());
+
+        shoppingRepository.save(shopping);
     }
 }

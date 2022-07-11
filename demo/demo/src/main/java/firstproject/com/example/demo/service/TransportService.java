@@ -11,7 +11,7 @@ public interface TransportService {
 
     TransportInfoDto createTransport(TransportCreateDto transportCreateDto);
 
-    void updateTransport(int transportId, String transportName, String transportDetail);
+    void updateTransport(int transportId, String transportType, String transportDetail);
 
     void deleteTransport(int transportId);
 }
